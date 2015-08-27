@@ -1,0 +1,178 @@
+#version 430
+
+in vec2 UV;
+
+out vec4 color;
+
+//uniform sampler2D renderedTexture;
+//uniform float time;
+
+layout (binding=0) uniform sampler2D renderedTexture;
+layout (binding=1) uniform sampler2D BlurTex1;
+layout (binding=2) uniform sampler2D BlurTex2;
+layout (binding=3) uniform sampler2D falseColorTexture;
+layout (binding=4) uniform sampler2D particleRenderedTexture;
+
+uniform float AveLum;
+uniform float litthreshold;
+
+subroutine vec4 RenderPassType();
+subroutine uniform RenderPassType RenderPass;
+
+uniform bool colorSwitch;
+
+uniform mat3 xyz2rgb = mat3(
+  3.2404542, -0.9692660, 0.0556434,
+  -1.5371385, 1.8760108, -0.2040259,
+  -0.4985314, 0.0415560, 1.0572252 );
+
+float luminance( vec3 color ) {
+   return 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+	//return  color.r + color.g + color.b;
+}
+
+vec2 v_blurTexCoords[14];
+
+// Bright-pass filter (write to BlurTex1)
+subroutine( RenderPassType )
+vec4 pass1()
+{
+    vec4 val = texture(falseColorTexture, UV);
+    if( luminance(val.rgb) > litthreshold ){
+		vec4 litAreaColor;
+		//litAreaColor.rgb = vec3(0.2,0.1,0.1);
+		if(colorSwitch){
+			litAreaColor.rgb = vec3(0.2,0.1,0.1);
+		}
+		else{
+			litAreaColor.rgb = vec3(0.1,0.2,0.1);
+		}
+		litAreaColor.a = val.a;
+       // return val+vec4(0.2,0.2,0.0,0.0);
+	   return litAreaColor;
+	}
+    else
+        return vec4(0.0);
+}
+
+// First blur pass (read from BlurTex1, write to BlurTex2)
+subroutine( RenderPassType )
+vec4 pass2()
+{
+	
+    v_blurTexCoords[ 0] = UV + vec2(0.0, -0.028);
+    v_blurTexCoords[ 1] = UV + vec2(0.0, -0.024);
+    v_blurTexCoords[ 2] = UV + vec2(0.0, -0.020);
+    v_blurTexCoords[ 3] = UV + vec2(0.0, -0.016);
+    v_blurTexCoords[ 4] = UV + vec2(0.0, -0.012);
+    v_blurTexCoords[ 5] = UV + vec2(0.0, -0.008);
+    v_blurTexCoords[ 6] = UV + vec2(0.0, -0.004);
+    v_blurTexCoords[ 7] = UV + vec2(0.0,  0.004);
+    v_blurTexCoords[ 8] = UV + vec2(0.0,  0.008);
+    v_blurTexCoords[ 9] = UV + vec2(0.0,  0.012);
+    v_blurTexCoords[10] = UV + vec2(0.0,  0.016);
+    v_blurTexCoords[11] = UV + vec2(0.0,  0.020);
+    v_blurTexCoords[12] = UV + vec2(0.0,  0.024);
+    v_blurTexCoords[13] = UV + vec2(0.0,  0.028);
+ 
+	color += texture(BlurTex1, v_blurTexCoords[ 0])*0.0044299121055113265;
+    color += texture(BlurTex1, v_blurTexCoords[ 1])*0.00895781211794;
+    color += texture(BlurTex1, v_blurTexCoords[ 2])*0.0215963866053; 
+    color += texture(BlurTex1, v_blurTexCoords[ 3])*0.0443683338718;
+    color += texture(BlurTex1, v_blurTexCoords[ 4])*0.0776744219933;
+    color += texture(BlurTex1, v_blurTexCoords[ 5])*0.115876621105;
+    color += texture(BlurTex1, v_blurTexCoords[ 6])*0.147308056121;
+    color += texture(BlurTex1, UV         )*0.159576912161;
+    color += texture(BlurTex1, v_blurTexCoords[ 7])*0.147308056121;
+    color += texture(BlurTex1, v_blurTexCoords[ 8])*0.115876621105;
+    color += texture(BlurTex1, v_blurTexCoords[ 9])*0.0776744219933;
+    color += texture(BlurTex1, v_blurTexCoords[10])*0.0443683338718;
+    color += texture(BlurTex1, v_blurTexCoords[11])*0.0215963866053;
+    color += texture(BlurTex1, v_blurTexCoords[12])*0.00895781211794;
+    color += texture(BlurTex1, v_blurTexCoords[13])*0.0044299121055113265;
+
+	return color;
+}
+
+// Second blur (read from BlurTex2, write to BlurTex1) 
+subroutine( RenderPassType )
+vec4 pass3()
+{
+    v_blurTexCoords[ 0] = UV + vec2(-0.028, 0.0);
+    v_blurTexCoords[ 1] = UV + vec2(-0.024, 0.0);
+    v_blurTexCoords[ 2] = UV + vec2(-0.020, 0.0);
+    v_blurTexCoords[ 3] = UV + vec2(-0.016, 0.0);
+    v_blurTexCoords[ 4] = UV + vec2(-0.012, 0.0);
+    v_blurTexCoords[ 5] = UV + vec2(-0.008, 0.0);
+    v_blurTexCoords[ 6] = UV + vec2(-0.004, 0.0);
+    v_blurTexCoords[ 7] = UV + vec2( 0.004, 0.0);
+    v_blurTexCoords[ 8] = UV + vec2( 0.008, 0.0);
+    v_blurTexCoords[ 9] = UV + vec2( 0.012, 0.0);
+    v_blurTexCoords[10] = UV + vec2( 0.016, 0.0);
+    v_blurTexCoords[11] = UV + vec2( 0.020, 0.0);
+    v_blurTexCoords[12] = UV + vec2( 0.024, 0.0);
+    v_blurTexCoords[13] = UV + vec2( 0.028, 0.0);
+
+	color += texture(BlurTex2, v_blurTexCoords[ 0])*0.0044299121055113265;
+    color += texture(BlurTex2, v_blurTexCoords[ 1])*0.00895781211794;
+    color += texture(BlurTex2, v_blurTexCoords[ 2])*0.0215963866053; 
+    color += texture(BlurTex2, v_blurTexCoords[ 3])*0.0443683338718;
+    color += texture(BlurTex2, v_blurTexCoords[ 4])*0.0776744219933;
+    color += texture(BlurTex2, v_blurTexCoords[ 5])*0.115876621105;
+    color += texture(BlurTex2, v_blurTexCoords[ 6])*0.147308056121;
+    color += texture(BlurTex2, UV         )*0.159576912161;
+    color += texture(BlurTex2, v_blurTexCoords[ 7])*0.147308056121;
+    color += texture(BlurTex2, v_blurTexCoords[ 8])*0.115876621105;
+    color += texture(BlurTex2, v_blurTexCoords[ 9])*0.0776744219933;
+    color += texture(BlurTex2, v_blurTexCoords[10])*0.0443683338718;
+    color += texture(BlurTex2, v_blurTexCoords[11])*0.0215963866053;
+    color += texture(BlurTex2, v_blurTexCoords[12])*0.00895781211794;
+    color += texture(BlurTex2, v_blurTexCoords[13])*0.0044299121055113265;
+    return color ;
+}
+
+//(read from BlurTex1, write to default frame buffer)
+subroutine( RenderPassType )
+vec4 pass4()
+{
+    vec4 oricolor = texture( renderedTexture, UV );
+	mat3 rgb2xyz = mat3( 
+  0.4124564, 0.2126729, 0.0193339,
+  0.3575761, 0.7151522, 0.1191920,
+  0.1804375, 0.0721750, 0.9503041 );
+    vec3 xyzCol = rgb2xyz * vec3(oricolor);
+    float xyzSum = xyzCol.x + xyzCol.y + xyzCol.z;
+    vec3 xyYCol = vec3( xyzCol.x / xyzSum, xyzCol.y / xyzSum, xyzCol.y);
+	float Exposure = 0.35;
+    float L = (Exposure * xyYCol.z) / AveLum;
+	float White = 0.928;
+    L = (L * ( 1 + L / (White * White) )) / ( 1 + L );
+
+    xyzCol.x = (L * xyYCol.x) / (xyYCol.y);
+    xyzCol.y = L;
+    xyzCol.z = (L * (1 - xyYCol.x - xyYCol.y))/xyYCol.y;
+
+    // Convert back to RGB
+    vec4 toneMapColor = vec4( xyz2rgb * xyzCol, 1.0);
+
+    
+    vec4 blurTex = texture(BlurTex1, UV);
+	//return oricolor+blurTex;
+
+	//check particle area
+	vec4 tempColor = texture( falseColorTexture, UV );
+	if(tempColor.r==0 && tempColor.g==0 && tempColor.b==0 ){
+		vec4 ParticleColor = texture( particleRenderedTexture, UV );
+		vec3 blendColor = mix(ParticleColor.rgb, toneMapColor.rgb, 0.5);
+		//return ParticleColor;
+		return vec4(blendColor, ParticleColor.a);
+	}else{
+		//return vec4(0.0,0.0,0.4,0.0);
+		return toneMapColor+blurTex ;
+	}
+}
+
+void main(){
+	    color = RenderPass();
+
+}

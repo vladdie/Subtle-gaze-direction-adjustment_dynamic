@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{67CD2507-F636-47B5-ADD5-AB7A87B644AD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>try</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\boost_1_58_0;$(SolutionDir)\ext\assimp;$(SolutionDir)\ext;$(SolutionDir)\ext\glew-1.10.0\include;$(SolutionDir)\ext\glfw-3.0.4.bin.WIN32\include\GLFW;$(SolutionDir)\ext\glm;$(SolutionDir)\ext\ImageMagick-6;$(SolutionDir);$(SolutionDir)\ext\soil\src;$(SolutionDir)\ext\eyeTribe\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\boost\boost_1_58_0\stage\lib;C:\Program Files (x86)\boost_1_58_0\stage\lib;$(SolutionDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;assimp.lib;SOIL.lib;CORE_DB_Magick++_.lib;GazeApiLibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\boost_1_58_0;$(SolutionDir)\ext\assimp;$(SolutionDir)\ext;$(SolutionDir)\ext\glew-1.10.0\include;$(SolutionDir)\ext\glfw-3.0.4.bin.WIN32\include\GLFW;$(SolutionDir)\ext\glm;$(SolutionDir)\ext\ImageMagick-6;$(SolutionDir);$(SolutionDir)\ext\soil\src;$(SolutionDir)\ext\eyeTribe\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\boost\boost_1_58_0\stage\lib;C:\Program Files (x86)\boost_1_58_0\stage\lib;$(SolutionDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;assimp.lib;SOIL.lib;CORE_DB_Magick++_.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="math_3d.cpp" />
+    <ClCompile Include="MeshLoader.cpp" />
+    <ClCompile Include="MyGaze.cpp" />
+    <ClCompile Include="ogldev_util.cpp" />
+    <ClCompile Include="oldCamera.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="shader.cpp" />
+    <ClCompile Include="TextureMesh.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MeshLoader.h" />
+    <ClInclude Include="MyGaze.h" />
+    <ClInclude Include="ogldev_math_3d.h" />
+    <ClInclude Include="ogldev_util.h" />
+    <ClInclude Include="oldCamera.h" />
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="shader.hpp" />
+    <ClInclude Include="TextureMesh.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="falseColor.fragmentshader" />
+    <None Include="falseColor.vertexshader" />
+    <None Include="HBlur.vs" />
+    <None Include="Particle.fragmentshader" />
+    <None Include="Particle.vertexshader" />
+    <None Include="Passthrough.vertexshader" />
+    <None Include="StandardShadingRTT.fragmentshader" />
+    <None Include="StandardShadingRTT.vertexshader" />
+    <None Include="VBlur.vs" />
+    <None Include="WobblyTexture.fragmentshader" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
